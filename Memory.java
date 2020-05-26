@@ -57,6 +57,18 @@ public class Memory {
             obj.put("values: ",obj1);
             obj.put("MaximumMemory(MB)", df.format(max));
             System.out.println(obj);
+        	try
+    		{
+    		
+    		FileWriter fw=new FileWriter("output.json");
+    		fw.write(obj.toString());
+    		fw.close();
+    		
+    		}
+    		catch(Exception e)
+    		{
+    			System.out.println(e);
+    		}
          }
  }
 }
