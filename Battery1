@@ -1,0 +1,61 @@
+import java.util.*;
+import java.io.*;
+import java.text.DecimalFormat;
+import java.math.RoundingMode;
+//import java.io.FileNotFoundException;
+import org.json.JSONObject;
+public class Battery {
+
+	public static void main(String[] args) throws IOException 
+	{
+		JSONObject obj  = new JSONObject();
+		//JSONObject obj1 = new JSONObject();
+		File fileIn1 = new File("C:\\Users\\Aditya\\Desktop\\Battery.txt");
+		try (BufferedReader bf = new BufferedReader(new FileReader(fileIn1))) 
+        {
+			String readLine;
+            double temp;
+            String t;
+            StringTokenizer st;
+            int line=0;
+            while ((readLine = bf.readLine()) != null) 
+            {
+                boolean isFound=readLine.toLowerCase().contains("uid u0a202");
+        		if(isFound==true)
+        		{
+        			st = new StringTokenizer(readLine," ");
+                    while(st.hasMoreTokens())
+                    {
+                    	t=st.nextToken();
+                    	line++;
+                    	if(line==3)
+                    	{
+                    		DecimalFormat df = new DecimalFormat("#.#####");
+                            df.setRoundingMode(RoundingMode.CEILING);
+                            temp=Double.parseDouble(t);
+                    		obj.put("Battery_drain: ",temp);
+                    		double temp1=temp/1000;
+                    		obj.put("Battery_percentage:", df.format(temp1));
+                    	}
+                    	}
+        		}
+        		boolean is=readLine.toLowerCase().contains("foreground");
+        		if(is==true)
+        		{
+        			obj.put("Foreground _time", readLine.substring(27));
+        		}
+            }
+            System.out.println(obj);
+        	try
+    		{
+    		FileWriter fw=new FileWriter("BatteryOutput1.json");
+    		fw.write(obj.toString());
+    		fw.close();
+    		}
+    		catch(Exception e)
+    		{
+    			System.out.println(e);
+    		}
+         }
+ }
+ }
