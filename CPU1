@@ -1,0 +1,67 @@
+import java.util.*;
+import java.io.*;
+import java.text.DecimalFormat;
+import java.math.RoundingMode;
+//import java.io.FileNotFoundException;
+import org.json.JSONObject;
+public class CPU {
+	public static void main(String[] args) throws IOException 
+	{
+		double[] a = new double[10000];
+		JSONObject obj  = new JSONObject();
+		JSONObject obj1 = new JSONObject();
+		File fileIn1 = new File("C:\\Users\\Aditya\\Desktop\\CPU.txt");
+		try (BufferedReader bf = new BufferedReader(new FileReader(fileIn1))) 
+        {
+            String readLine;
+            double temp;
+            String t;
+            StringTokenizer st;
+            int i=0;
+            double sum=0.0;
+            double max = 0.0;
+            while ((readLine = bf.readLine()) != null) 
+            {
+            	int line = 0;
+                	st=new StringTokenizer (readLine," ");
+                    while(st.hasMoreTokens())
+                    {
+                    	t=st.nextToken();
+                    	line++;
+                    	if(line==9)
+                    	{
+                    		temp=Double.parseDouble(t);
+                    		a[i++]=temp;
+                    		break;
+                    	}
+                    	}
+            }
+            for(int j=0;j<i;j++)
+            {
+            	String t1=String.valueOf(j);
+            	t1=t1+"s";
+            	obj1.put(t1, a[j]);
+            	sum=sum+a[j];
+            	if(max<a[j])
+            		max=a[j];
+            	}
+            double avg=sum/i;
+            DecimalFormat df = new DecimalFormat("#.##");
+            df.setRoundingMode(RoundingMode.CEILING);
+            obj.put("AverageMemory(MB)", df.format(avg));
+            obj.put("values: ",obj1);
+            obj.put("MaximumMemory(MB)", df.format(max));
+            System.out.println(obj);
+        	try
+    		{
+    		FileWriter fw=new FileWriter("CPUOutput1.json");
+    		fw.write(obj.toString());
+    		fw.close();
+    		}
+    		catch(Exception e)
+    		{
+    			System.out.println(e);
+    		}
+         }
+ }
+ }
